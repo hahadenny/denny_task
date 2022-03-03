@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class TaskController extends Controller
 {
     public function showTasks(Request $request) {
-		//print_r($request->all()); exit;
+		print_r($request->all()); exit;
 	}
 	
 	public function addTask(Request $request) {
