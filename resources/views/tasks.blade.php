@@ -84,7 +84,7 @@
         </div>
         <div class="modal-body">
           @if(Session::get('editerror'))
-		  <div class="alert-danger p-2">Please review the invalid fields below.</div>
+		  <div class="eerr alert-danger p-2">Please review the invalid fields below.</div>
 	      @endif
 
           <form name="edit-task-form" method="post" action="{{ asset('/editTask') }}" class="p-2">
@@ -93,7 +93,7 @@
 		    <div class="mb-3">
               <textarea id="eDescription" name="eDescription" class="form-control form-control-lg" maxlength=200 required>{{old('eDescription')}}</textarea>
               @if($errors->has('eDescription'))
-			  <div class="text-danger">{{$errors->first('eDescription')}}</div>
+			  <div class="eerr text-danger">{{$errors->first('eDescription')}}</div>
 			  @endif
             </div>
 			
@@ -110,7 +110,7 @@
             <div class="mb-3">
               <input id="eAssignee" type="text" name="eAssignee" class="form-control form-control-lg" maxlength=100 value="{{old('eAssignee')}}" required>
               @if($errors->has('eAssignee'))
-			  <div class="text-danger">{{$errors->first('eAssignee')}}</div>
+			  <div class="eerr text-danger">{{$errors->first('eAssignee')}}</div>
 			  @endif
             </div>
 			@endif
@@ -118,7 +118,7 @@
             <div class="mb-3">
               <input id="eDueDate" type="text" name="eDueDate" class="form-control form-control-lg" maxlength=10 value="{{old('eDueDate')}}" required>
               @if($errors->has('eDueDate'))
-			  <div class="text-danger">{{$errors->first('eDueDate')}}</div>
+			  <div class="eerr text-danger">{{$errors->first('eDueDate')}}</div>
 			  @endif
             </div>
 			
@@ -204,17 +204,19 @@
 @section('script')
 <script>
 function fillEdit(Id) {	
-  document.getElementById('eId').value=Id;
-  if (!document.getElementById('eDueDate').value)
+  if (Id != "{{old('eId')}}") {
+	const eerrs = document.getElementsByClassName('eerr');
+	for (const eerr of eerrs) {
+      eerr.style.display = 'none';
+	}
+    document.getElementById('eId').value=Id;
     document.getElementById('eDueDate').value=document.getElementById('DueDate'+Id).innerHTML;
-  if (!document.getElementById('eDescription').value)
     document.getElementById('eDescription').value=document.getElementById('Description'+Id).innerHTML;
-  if (!document.getElementById('ePriority').value)
     document.getElementById('ePriority').value=document.getElementById('Priority'+Id).innerHTML;
-  if (!document.getElementById('eStatus').value)
     document.getElementById('eStatus').value=document.getElementById('Status'+Id).innerHTML;
-  if (document.getElementById('eAssignee') && !document.getElementById('eAssignee').value)
-    document.getElementById('eAssignee').value=document.getElementById('Assignee'+Id).innerHTML;  
+	if (document.getElementById('eAssignee'))
+      document.getElementById('eAssignee').value=document.getElementById('Assignee'+Id).innerHTML; 
+  }  
 }
 
 @if(Session::get('adderror'))
