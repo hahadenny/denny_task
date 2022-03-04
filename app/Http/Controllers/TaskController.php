@@ -52,7 +52,7 @@ class TaskController extends Controller
 		$data->DateUpdated = date('Y-m-d H:i:s');
 		$data->save();
 		
-		return redirect("/showTasks")->withSuccess('Task added successfully.');
+		return redirect("/showTasks")->withSuccess("Task ID: $data->Id added successfully.");
 	}
 	
 	public function editTask(Request $request) {
