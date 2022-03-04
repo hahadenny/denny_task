@@ -187,9 +187,9 @@
 				<td id="DateUpdated{{$task->Id}}">{{$task->DateUpdated}}</td>
 				<td id="Status{{$task->Id}}">{{$task->Status}}</td>
 				<td>
-				  <span onclick="fillEdit({{$task->Id}});"><a id="edit{{$task->Id}}" href="javascript:void(0);" class="btn btn-success btn-sm py-0 editLink" data-bs-toggle="modal" data-bs-target="#editTaskModal">Edit</a></span>
+				  <button id="edit{{$task->Id}}" class="btn btn-success btn-sm py-0 editLink" onclick="fillEdit({{$task->Id}});" data-bs-toggle="modal" data-bs-target="#editTaskModal">Edit</button>
 				  
-				  <a href="{{ asset("/delTask/$task->Id") }}" class="btn btn-danger btn-sm py-0 deleteLink">Delete</a>
+				  <button onclick="delTask({{$task->Id}});" class="btn btn-danger btn-sm py-0">Delete</button>
 				</td>
               </tr>
 			  @endforeach            
@@ -203,6 +203,12 @@
 
 @section('script')
 <script>
+function delTask(Id) {
+	if (confirm('Are you sure to delete Task ID: '+Id+'?')) {
+		window.location = 'delTask/'+Id;
+	}
+}
+
 function fillEdit(Id) {	
   const eerrs = document.getElementsByClassName('eerr');
   if (Id != "{{old('eId')}}" || eerrs[0].style.display == 'none') {	
