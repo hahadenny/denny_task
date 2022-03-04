@@ -40,7 +40,7 @@ php artisan migrate
 
 ### 6. Testing different user and admin settings
 
-You can change user and admin settings in .env file
+You can change test user and admin settings in .env file
 
 ```bash
 vi .env
