@@ -61,7 +61,7 @@
             </div>
 
             <div class="mb-3">
-              <input type="submit" value="Add Task" class="btn btn-primary btn-block btn-lg" id="add-user-btn">
+              <input type="submit" value="Add Task" class="btn btn-primary btn-block btn-lg">
             </div>
           </form>
         </div>
@@ -71,42 +71,65 @@
   <!-- Add New Task Modal End -->
 
   <!-- Edit User Modal Start -->
-  <div class="modal fade" tabindex="-1" id="editUserModal">
+  <div class="modal fade" tabindex="-1" id="editTaskModal">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Edit This User</h5>
+          <h5 class="modal-title">Edit This Task</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="edit-user-form" class="p-2" novalidate>
-            <input type="hidden" name="id" id="id">
-            <div class="row mb-3 gx-3">
-              <div class="col">
-                <input type="text" name="fname" id="fname" class="form-control form-control-lg" placeholder="Enter First Name" required>
-                <div class="invalid-feedback">First name is required!</div>
-              </div>
+          @if(Session::get('editerror'))
+		  <div class="alert-danger p-2">Please review the invalid fields below.</div>
+	      @endif
 
-              <div class="col">
-                <input type="text" name="lname" id="lname" class="form-control form-control-lg" placeholder="Enter Last Name" required>
-                <div class="invalid-feedback">Last name is required!</div>
-              </div>
+          <form name="edit-task-form" method="post" action="{{ asset('/editTask') }}" class="p-2">
+			@csrf
+			<input type="hidden" id="eId" name="eId" value="{{old('eId')}}" />
+		    <div class="mb-3">
+              <textarea id="eDescription" name="eDescription" class="form-control form-control-lg" maxlength=200 required>{{old('eDescription')}}</textarea>
+              @if($errors->has('eDescription'))
+			  <div class="text-danger">{{$errors->first('eDescription')}}</div>
+			  @endif
+            </div>
+			
+			<div class="mb-3">
+              <select id="ePriority" name="ePriority" class="form-select form-select-lg">
+			    <option value="Low" @if(old('ePriority')=='Low') selected @endif>Low</option>
+				<option value="Medium" @if(old('ePriority')=='Medium') selected @endif>Medium</option>
+				<option value="High" @if(old('ePriority')=='High') selected @endif>High</option>
+				<option value="Critical" @if(old('ePriority')=='Critical') selected @endif>Critical</option>
+			  </select>
+            </div>
+
+			@if(env('TEST_IS_ADMIN'))
+            <div class="mb-3">
+              <input id="eAssignee" type="text" name="eAssignee" class="form-control form-control-lg" maxlength=100 value="{{old('eAssignee')}}" required>
+              @if($errors->has('eAssignee'))
+			  <div class="text-danger">{{$errors->first('eAssignee')}}</div>
+			  @endif
+            </div>
+			@endif
+
+            <div class="mb-3">
+              <input id="eDueDate" type="text" name="eDueDate" class="form-control form-control-lg" maxlength=10 value="{{old('eDueDate')}}" required>
+              @if($errors->has('eDueDate'))
+			  <div class="text-danger">{{$errors->first('eDueDate')}}</div>
+			  @endif
+            </div>
+			
+			<div class="mb-3">
+              <select id="eStatus" name="eStatus" class="form-select form-select-lg">
+			    <option value="Pending" @if(old('eStatus')=='Pending') selected @endif>Pending</option>
+				<option value="In Progress" @if(old('eStatus')=='In Progress') selected @endif>In Progress</option>
+				<option value="Complete" @if(old('eStatus')=='Complete') selected @endif>Complete</option>
+			  </select>
             </div>
 
             <div class="mb-3">
-              <input type="email" name="email" id="email" class="form-control form-control-lg" placeholder="Enter E-mail" required>
-              <div class="invalid-feedback">E-mail is required!</div>
+              <input type="submit" value="Update Task" class="btn btn-primary btn-block btn-lg">
             </div>
-
-            <div class="mb-3">
-              <input type="tel" name="phone" id="phone" class="form-control form-control-lg" placeholder="Enter Phone" required>
-              <div class="invalid-feedback">Phone is required!</div>
-            </div>
-
-            <div class="mb-3">
-              <input type="submit" value="Update User" class="btn btn-success btn-block btn-lg" id="edit-user-btn">
-            </div>
-          </form>
+		  </form>
         </div>
       </div>
     </div>
@@ -146,27 +169,26 @@
 				<th>Status</th>
 				<th>Action</th>
               </tr>
+			</thead>
+            <tbody>
 			  @foreach ($tasks as $task) 
 			  <tr>
-                <td>{{$task->Id}}</td>
-				<td>{{$task->Description}}</td>
-                <td>{{$task->Creator}}</td>
-                <td>{{$task->Priority}}</td>
-                <td>{{$task->DueDate}}</td>
-				<td>{{$task->Assignee}}</td>
-				<td>{{$task->DateAdded}}</td>
-				<td>{{$task->DateUpdated}}</td>
-				<td>{{$task->Status}}</td>
+                <td id="Id{{$task->Id}}">{{$task->Id}}</td>
+				<td id="Description{{$task->Id}}">{{$task->Description}}</td>
+                <td id="Creator{{$task->Id}}">{{$task->Creator}}</td>
+                <td id="Priority{{$task->Id}}">{{$task->Priority}}</td>
+                <td id="DueDate{{$task->Id}}">{{$task->DueDate}}</td>
+				<td id="Assignee{{$task->Id}}">{{$task->Assignee}}</td>
+				<td id="DateAdded{{$task->Id}}">{{$task->DateAdded}}</td>
+				<td id="DateUpdated{{$task->Id}}">{{$task->DateUpdated}}</td>
+				<td id="Status{{$task->Id}}">{{$task->Status}}</td>
 				<td>
-				  <a href="javascript:void(0);" class="btn btn-success btn-sm py-0 editLink" data-bs-toggle="modal" data-bs-target="#editUserModal">Edit</a>
+				  <span onclick="fillEdit({{$task->Id}});"><a id="edit{{$task->Id}}" href="javascript:void(0);" class="btn btn-success btn-sm py-0 editLink" data-bs-toggle="modal" data-bs-target="#editTaskModal">Edit</a></span>
 				  
 				  <a href="javascript:void(0);" class="btn btn-danger btn-sm py-0 deleteLink">Delete</a>
 				</td>
               </tr>
-			  @endforeach
-            </thead>
-            <tbody>
-
+			  @endforeach            
             </tbody>
           </table>
         </div>
@@ -176,10 +198,27 @@
 @endsection
 
 @section('script')
+<script>
+function fillEdit(Id) {	
+  document.getElementById('eId').value=Id;
+  if (!document.getElementById('eDueDate').value)
+    document.getElementById('eDueDate').value=document.getElementById('DueDate'+Id).innerHTML;
+  if (!document.getElementById('eDescription').value)
+    document.getElementById('eDescription').value=document.getElementById('Description'+Id).innerHTML;
+  if (!document.getElementById('ePriority').value)
+    document.getElementById('ePriority').value=document.getElementById('Priority'+Id).innerHTML;
+  if (!document.getElementById('eStatus').value)
+    document.getElementById('eStatus').value=document.getElementById('Status'+Id).innerHTML;
+  if (document.getElementById('eAssignee') && !document.getElementById('eAssignee').value)
+    document.getElementById('eAssignee').value=document.getElementById('Assignee'+Id).innerHTML;  
+}
 
-<script type="module">
 @if(Session::get('adderror'))
 document.getElementById('addTaskBtn').click();
+@endif
+
+@if(Session::get('editerror'))
+document.getElementById('edit'+{{Session::get('taskid')}}).click();
 @endif
 </script>
 @endsection

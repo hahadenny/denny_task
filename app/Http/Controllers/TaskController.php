@@ -13,9 +13,7 @@ class TaskController extends Controller
 		return view('tasks', ['tasks' => $tasks, 'user' => env('TEST_USERNAME'), 'admin' => env('TEST_IS_ADMIN')]);
 	}
 	
-	public function addTask(Request $request) {
-		//print_r($request->all()); exit;
-		
+	public function addTask(Request $request) {	
 		$rules = [
 			'Description' => array('required', 'string', 'max:200'),
 			'Priority' => array('required', 'in:Low,Medium,High,Critical'),
@@ -57,7 +55,47 @@ class TaskController extends Controller
 		return redirect("/showTasks")->withSuccess('Task added successfully.');
 	}
 	
-	public function editTask($Id, Request $request) {
+	public function editTask(Request $request) {
+		//print_r($request->all()); exit;
+		
+		$rules = [
+			'eId' => array('required', 'numeric'),
+			'eDescription' => array('required', 'string', 'max:200'),
+			'ePriority' => array('required', 'in:Low,Medium,High,Critical'),
+			'eAssignee' => array('string', 'max:100'),
+			'eDueDate' => array('required', 'regex:/^\d{4}\-\d{2}\-\d{2}$/'),
+			'eStatus' => array('required', 'in:Pending,In Progress,Complete')
+		];
+				
+		$messages = [
+		];
+		
+		$validator = Validator::make($request->all(), $rules, $messages);
+		
+		$validator->after(function($validator) use ($request) {	
+			if ($request->eDueDate < date('Y-m-d'))
+				$validator->errors()->add('eDueDate', 'Due Date cannot be a past date.');
+			
+			$otask = Task::where([['Description', trim($request->eDescription)], ['Id', '<>', $request->eId]])->get();
+			if (count($otask))
+				$validator->errors()->add('eDescription', 'Task exists already.');			
+		});
+		
+		if ($validator->fails()) {			
+			//print_r($validator->errors()->all()); exit;			
+			return back()->withErrors($validator)->withInput()->with(['editerror'=>1, 'taskid'=>$request->eId]);
+		}
+		
+		$data = array();
+		$data['Description'] = $request->eDescription;
+		$data['Priority'] = $request->ePriority;
+		if (env('TEST_IS_ADMIN') && $request->eAssignee)
+			$data['Assignee'] = $request->eAssignee;
+		$data['DueDate'] = $request->eDueDate;
+		$data['Status'] = $request->eStatus;
+		Task::where('Id', $request->eId)->update($data);
+		
+		return redirect("/showTasks")->withSuccess("Task ID: $request->eId updated successfully.");
 	}
 	
 	public function delTask($Id, Request $request) {
