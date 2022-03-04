@@ -33,7 +33,7 @@ class TaskController extends Controller
 			
 			$otask = Task::where('Description', trim($request->Description))->get();
 			if (count($otask))
-				$validator->errors()->add('Description', 'Task exists already.');			
+				$validator->errors()->add('Description', "Task exists already. (Task ID: {$otask[0]->Id})");			
 		});
 		
 		if ($validator->fails()) {			
@@ -78,7 +78,7 @@ class TaskController extends Controller
 			
 			$otask = Task::where([['Description', trim($request->eDescription)], ['Id', '<>', $request->eId]])->get();
 			if (count($otask))
-				$validator->errors()->add('eDescription', 'Task exists already.');			
+				$validator->errors()->add('eDescription', "Task exists already. (Task ID: {$otask[0]->Id})");			
 		});
 		
 		if ($validator->fails()) {			
