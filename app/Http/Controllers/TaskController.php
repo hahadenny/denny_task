@@ -18,7 +18,7 @@ class TaskController extends Controller
 			'Description' => array('required', 'string', 'max:200'),
 			'Priority' => array('required', 'in:Low,Medium,High,Critical'),
 			'Assignee' => array('required', 'string', 'max:100'),
-			'DueDate' => array('required', 'regex:/^\d{4}\-\d{2}\-\d{2}$/'),
+			'DueDate' => array('required', 'date_format:Y-m-d'),
 			'Status' => array('required', 'in:Pending,In Progress,Complete')
 		];
 				
@@ -63,7 +63,7 @@ class TaskController extends Controller
 			'eDescription' => array('required', 'string', 'max:200'),
 			'ePriority' => array('required', 'in:Low,Medium,High,Critical'),
 			'eAssignee' => array('string', 'max:100'),
-			'eDueDate' => array('required', 'regex:/^\d{4}\-\d{2}\-\d{2}$/'),
+			'eDueDate' => array('required', 'date_format:Y-m-d'),
 			'eStatus' => array('required', 'in:Pending,In Progress,Complete')
 		];
 				
