@@ -5,12 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Task;
+use Session;
 
 class TaskController extends Controller
 {
-    public function showTasks(Request $request) {		
+    public function showTasks(Request $request) {	
+		if (!Session::has('TEST_IS_ADMIN') || env('TEST_IS_ADMIN') != Session::get('TEST_IS_ADMIN')) {
+			Session::put('TEST_IS_ADMIN', env('TEST_IS_ADMIN'));
+		}
+		if (!Session::has('TEST_USERNAME') || env('TEST_USERNAME') != Session::get('TEST_USERNAME')) {
+			Session::put('TEST_USERNAME', env('TEST_USERNAME'));	
+		}
+			
 		$tasks = Task::orderBy('Id', 'desc')->get();
-		return view('tasks', ['tasks' => $tasks, 'user' => env('TEST_USERNAME'), 'admin' => env('TEST_IS_ADMIN')]);
+		return view('tasks', ['tasks' => $tasks, 'user' => Session::get('TEST_USERNAME'), 'admin' => Session::get('TEST_IS_ADMIN')]);
 	}
 	
 	public function addTask(Request $request) {	
@@ -42,7 +50,7 @@ class TaskController extends Controller
 		}
 		
 		$data = new Task();
-		$data->Creator = env('TEST_USERNAME');
+		$data->Creator = Session::get('TEST_USERNAME');
 		$data->Description = $request->Description;
 		$data->Priority = $request->Priority;
 		$data->Assignee = $request->Assignee;
@@ -55,9 +63,7 @@ class TaskController extends Controller
 		return redirect("/showTasks")->withSuccess("Task ID: $data->Id added successfully.");
 	}
 	
-	public function editTask(Request $request) {
-		//print_r($request->all()); exit;
-		
+	public function editTask(Request $request) {		
 		$rules = [
 			'eId' => array('required', 'numeric'),
 			'eDescription' => array('required', 'string', 'max:200'),
@@ -81,15 +87,14 @@ class TaskController extends Controller
 				$validator->errors()->add('eDescription', "Task exists already. (Task ID: {$otask[0]->Id})");			
 		});
 		
-		if ($validator->fails()) {			
-			//print_r($validator->errors()->all()); exit;			
+		if ($validator->fails()) {					
 			return back()->withErrors($validator)->withInput()->with(['editerror'=>1, 'taskid'=>$request->eId]);
 		}
 		
 		$data = array();
 		$data['Description'] = $request->eDescription;
 		$data['Priority'] = $request->ePriority;
-		if (env('TEST_IS_ADMIN') && $request->eAssignee)
+		if (Session::get('TEST_IS_ADMIN') && $request->eAssignee)
 			$data['Assignee'] = $request->eAssignee;
 		$data['DueDate'] = $request->eDueDate;
 		$data['Status'] = $request->eStatus;
@@ -101,7 +106,7 @@ class TaskController extends Controller
 	public function delTask($Id, Request $request) {		
 		$task = Task::find($Id);
 		
-		if ($task->Creator != env('TEST_USERNAME'))
+		if ($task->Creator != Session::get('TEST_USERNAME'))
 			return back()->with('error', "Error: You cannot delete Task ID: $Id as you are not the creator of this task.");
 		
 		if ($task)

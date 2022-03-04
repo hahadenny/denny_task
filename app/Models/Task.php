@@ -18,6 +18,14 @@ class Task extends Model
      * @var array
      */
     protected $fillable = [
+		'DateAdded',
+		'DateUpdated',
+		'Creator',
+		'Assignee',
+		'Description',
+		'Priority',
+		'DueDate',
+		'Status'
     ];
 
     /**

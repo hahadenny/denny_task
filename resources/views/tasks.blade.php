@@ -106,7 +106,7 @@
 			  </select>
             </div>
 
-			@if(env('TEST_IS_ADMIN'))
+			@if(Session::get('TEST_IS_ADMIN'))
             <div class="mb-3">
               <input id="eAssignee" type="text" name="eAssignee" class="form-control form-control-lg" maxlength=100 value="{{old('eAssignee')}}" required>
               @if($errors->has('eAssignee'))
