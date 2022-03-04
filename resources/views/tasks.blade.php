@@ -6,6 +6,10 @@
   @if (Session::has('success'))
   <div class="alert-success p-2">{{ Session::get('success') }}</div>
   @endif
+  
+  @if (Session::has('error'))
+  <div class="alert-danger p-2">{{ Session::get('error') }}</div>
+  @endif
 
   <!-- Add New Task Modal Start -->
   <div class="modal fade" tabindex="-1" id="addNewTaskModal">
@@ -185,7 +189,7 @@
 				<td>
 				  <span onclick="fillEdit({{$task->Id}});"><a id="edit{{$task->Id}}" href="javascript:void(0);" class="btn btn-success btn-sm py-0 editLink" data-bs-toggle="modal" data-bs-target="#editTaskModal">Edit</a></span>
 				  
-				  <a href="javascript:void(0);" class="btn btn-danger btn-sm py-0 deleteLink">Delete</a>
+				  <a href="{{ asset("/delTask/$task->Id") }}" class="btn btn-danger btn-sm py-0 deleteLink">Delete</a>
 				</td>
               </tr>
 			  @endforeach            

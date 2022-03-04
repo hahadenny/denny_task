@@ -98,6 +98,15 @@ class TaskController extends Controller
 		return redirect("/showTasks")->withSuccess("Task ID: $request->eId updated successfully.");
 	}
 	
-	public function delTask($Id, Request $request) {
+	public function delTask($Id, Request $request) {		
+		$task = Task::find($Id);
+		
+		if ($task->Creator != env('TEST_USERNAME'))
+			return back()->with('error', "Error: You cannot delete Task ID: $Id as you are not the creator of this task.");
+		
+		if ($task)
+			$task->delete();
+		
+		return redirect("/showTasks")->withSuccess("Task ID: $Id deleted successfully.");
 	}
 }
