@@ -38,7 +38,7 @@ php artisan migrate
 ./vendor/bin/phpunit
 ```
 
-### 6. Testing different user and admin settings
+### 6. Testing different test users and admin settings
 
 You can change test user and admin settings in .env file
 
