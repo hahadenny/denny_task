@@ -17,7 +17,8 @@ class Task extends Migration
 			$table->increments('Id');
 			$table->dateTime('DateAdded');
 			$table->dateTime('DateUpdated');
-			$table->string('Username');
+			$table->string('Creator');
+			$table->string('Assignee');
 			$table->longText('Description');
 			$table->enum('Priority', ['Low', 'Medium', 'High', 'Critical']);			
 			$table->date('DueDate');
@@ -28,7 +29,8 @@ class Task extends Migration
         DB::table('Task')->insert([[
             'DateAdded' => DB::raw('NOW()'),
 			'DateUpdated' => DB::raw('NOW()'),
-			'UserName' => 'David',
+			'Creator' => 'David',
+			'Assignee' => 'John',
 			'Description' => 'Add Custom Titles',
             'Priority' => 'Low',
 			'DueDate' => '2022-05-01',
@@ -37,7 +39,8 @@ class Task extends Migration
 	    [
             'DateAdded' => DB::raw('NOW()'),
 			'DateUpdated' => DB::raw('NOW()'),
-			'UserName' => 'Denny',
+			'Creator' => 'Denny',
+			'Assignee' => 'James',
 			'Description' => 'Add Custom Buttons',
             'Priority' => 'High',
 			'DueDate' => '2022-04-01',
