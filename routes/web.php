@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', 'TaskController@showTasks');
+
 Route::get('showTasks', 'TaskController@showTasks');
 
 Route::post('addTask', 'TaskController@addTask');
