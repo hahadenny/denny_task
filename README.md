@@ -45,6 +45,6 @@ You can change test user and admin settings in .env file
 ```bash
 vi .env
 
-TEST_USERNAME=Denny
+TEST_USERNAME='Denny'
 TEST_IS_ADMIN=0  #0 or 1
 ```
