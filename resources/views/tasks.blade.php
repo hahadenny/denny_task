@@ -204,8 +204,8 @@
 @section('script')
 <script>
 function fillEdit(Id) {	
-  if (Id != "{{old('eId')}}") {
-	const eerrs = document.getElementsByClassName('eerr');
+  const eerrs = document.getElementsByClassName('eerr');
+  if (Id != "{{old('eId')}}" || eerrs[0].style.display == 'none') {	
 	for (const eerr of eerrs) {
       eerr.style.display = 'none';
 	}
