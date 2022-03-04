@@ -10,7 +10,8 @@
 </head>
 
 <body>
-	@yield('content')
+  @yield('content')
+  @yield('script')
 </body>
 
 </html>
