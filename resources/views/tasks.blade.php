@@ -74,7 +74,7 @@
   </div>
   <!-- Add New Task Modal End -->
 
-  <!-- Edit User Modal Start -->
+  <!-- Edit Task Modal Start -->
   <div class="modal fade" tabindex="-1" id="editTaskModal">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -138,7 +138,7 @@
       </div>
     </div>
   </div>
-  <!-- Edit User Modal End -->
+  <!-- Edit Task Modal End -->
   <div class="container">
     <div class="row mt-4">
       <div class="col-lg-12 d-flex justify-content-between align-items-center">
